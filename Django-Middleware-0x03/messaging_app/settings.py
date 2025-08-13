@@ -31,16 +31,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Default Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # your app
-    'messaging.apps.MessagingConfig',
+
+    # Your apps
+    'messaging',      # make sure this matches your app folder
+    # remove any reference to messaging_app_temp
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
