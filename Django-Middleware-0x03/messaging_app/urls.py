@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('messaging/', include('messaging.urls')),  # Make sure messaging/urls.py exists
+    path('', include('chats.urls')),
 ]
