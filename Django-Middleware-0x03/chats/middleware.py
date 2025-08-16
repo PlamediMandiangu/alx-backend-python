@@ -1,6 +1,6 @@
-# chats/middleware.py
 from django.http import HttpResponseForbidden
 from time import time
+from datetime import datetime
 
 # 1️⃣ Restrict Access by Time
 class RestrictAccessByTimeMiddleware:
@@ -8,10 +8,8 @@ class RestrictAccessByTimeMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Only enforce on chat paths
         if request.path.startswith('/chats/'):
-            current_hour = int(time() / 3600) % 24  # simple hour
-            # Deny access between 21:00 (9PM) and 6:00 (6AM)
+            current_hour = datetime.now().hour
             if current_hour >= 21 or current_hour < 6:
                 return HttpResponseForbidden("Chat access is restricted at this time.")
         return self.get_response(request)
@@ -27,7 +25,6 @@ class OffensiveLanguageMiddleware:
             ip = request.META.get('REMOTE_ADDR')
             now = time()
             timestamps = self.ip_timestamps.get(ip, [])
-            # Remove timestamps older than 60s
             timestamps = [t for t in timestamps if now - t < 60]
             if len(timestamps) >= 5:
                 return HttpResponseForbidden("Too many messages. Please wait a minute.")
@@ -49,7 +46,8 @@ class RolepermissionMiddleware:
             if user_role not in ['admin', 'moderator']:
                 return HttpResponseForbidden("You do not have permission to perform this action.")
         return self.get_response(request)
-# chats/middleware.py
+
+# 4️⃣ Request Logging
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
